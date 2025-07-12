@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pembayaran - Dyos Channel</title>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #0e0b24;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 40px 15px;
+    }
+
+    .payment-box {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 16px;
+      background: #11152b;
+      box-shadow: 0 0 25px #0ff, 0 0 40px #0ff33f33;
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #00f7ff;
+      text-shadow: 0 0 8px #00f7ff;
+    }
+
+    .detail, .info {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    input[type="text"] {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      background: #0e0b24;
+      color: #fff;
+      border: 1px solid #00f7ff;
+      box-shadow: 0 0 8px #00f7ff55;
+    }
+
+    .wa-btn, .back-btn, .toggle-qris {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 15px 8px;
+      background: #25D366;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #25D366;
+    }
+
+    .wa-btn:hover, .toggle-qris:hover {
+      background-color: #1ebc5e;
+      box-shadow: 0 0 20px #1ebc5e;
+    }
+
+    .rekening-list {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .rekening-list h3 {
+      color: #00ff84;
+      text-shadow: 0 0 8px #00ff84;
+    }
+
+    .rekening-list .item {
+      margin: 8px 0;
+      padding-left: 25px;
+      position: relative;
+      font-size: 15px;
+    }
+
+    .rekening-list img {
+      width: 18px;
+      position: absolute;
+      left: 0;
+      top: 3px;
+    }
+
+    #qris-section {
+      margin-top: 20px;
+      display: none;
+    }
+
+    #qris-section img {
+      width: 200px;
+      margin-top: 10px;
+    }
+
+    #popup {
+      display: none;
+      margin-top: 20px;
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 40px;
+      color: #999;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="payment-box">
+    <h1>Detail Pembayaran</h1>
+    <p class="detail"><strong>Paket:</strong> <span id="paket-nama"></span></p>
+    <p class="detail"><strong>Harga:</strong> <span id="paket-harga"></span></p>
+    <p class="detail"><strong>Perangkat:</strong> <span id="paket-device"></span></p>
+    <p class="detail"><strong>Dewasa:</strong> <span id="paket-dewasa"></span></p>
+
+    <input type="text" id="nama" placeholder="Masukkan Nama Anda" />
+    <input type="text" id="username" placeholder="Username Akun Anda" />
+    <input type="text" id="whatsapp" placeholder="Nomor WhatsApp Aktif" />
+
+    <p class="info">Transfer ke rekening atau e-wallet berikut:</p>
+
+    <div class="rekening-list" id="rekening">
+      <h3>🏦 Transfer Bank</h3>
+      <div class="item"><img src="assets/bank-mandiri.png" alt="Mandiri"> Mandiri: 1610007715050 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/bank-bni.png" alt="BNI"> BNI: 1922516179 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/bank-jago.png" alt="JAGO"> JAGO: 109444655135 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/bank-seabank.png" alt="SeaBank"> SeaBank: 901178455562 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/bank-superbank.png" alt="Superbank"> Superbank: 000004544599 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/bank-jenius.png" alt="Jenius"> BTPN / Jenius: 90380098405 a.n. Cahyadi</div>
+
+      <h3>📱 E-Wallet</h3>
+      <div class="item"><img src="assets/gopay.png" alt="Gopay"> Gopay: 082247433423 a.n. Sri Rismiharti</div>
+      <div class="item"><img src="assets/ovo.png" alt="OVO"> OVO: 082247433423 a.n. Cahyadi</div>
+      <div class="item"><img src="assets/dana.png" alt="DANA"> DANA: 082247433423 a.n. Cahyadi</div>
+    </div>
+
+    <button class="toggle-qris" onclick="toggleQRIS()">Tampilkan QRIS</button>
+
+    <div id="qris-section">
+      <h3>🔳 QRIS Pembayaran</h3>
+      <img src="assets/qris.png" alt="QRIS Pembayaran" />
+      <p style="color:#ccc; margin-top: 0.5rem;">Scan QRIS di atas untuk pembayaran cepat</p>
+    </div>
+
+    <p class="info">Setelah membayar, klik tombol WA untuk kirim bukti pembayaran.</p>
+    <a href="#" id="wa-link" class="wa-btn" target="_blank">Kirim via WhatsApp</a>
+    <a href="index.html" class="back-btn">Kembali</a>
+    <div id="popup">✅ Bukti pembayaran siap dikirim via WhatsApp</div>
+  </div>
+
+  <div class="footer">
+    &copy; 2025 Dyos Channel Official
+  </div>
+
+  <script>
+    const paketData = {
+      'R1B1': { nama: '1 Bulan', harga: 'Rp30.000', device: '1 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R1B2': { nama: '1 Bulan', harga: 'Rp50.000', device: '2 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R3B1': { nama: '3 Bulan', harga: 'Rp85.000', device: '1 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R3B2': { nama: '3 Bulan', harga: 'Rp105.000', device: '2 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R6B1': { nama: '6 Bulan', harga: 'Rp110.000', device: '1 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R6B2': { nama: '6 Bulan', harga: 'Rp135.000', device: '2 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R12B1': { nama: '12 Bulan', harga: 'Rp200.000', device: '1 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R12B2': { nama: '12 Bulan', harga: 'Rp270.000', device: '2 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'R12B5': { nama: '12 Bulan', harga: 'Rp500.000', device: '5 Perangkat', dewasa: 'Tanpa Konten Dewasa' },
+      'D1B1': { nama: '1 Bulan', harga: 'Rp40.000', device: '1 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D1B2': { nama: '1 Bulan', harga: 'Rp65.000', device: '2 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D3B1': { nama: '3 Bulan', harga: 'Rp100.000', device: '1 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D3B2': { nama: '3 Bulan', harga: 'Rp125.000', device: '2 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D6B1': { nama: '6 Bulan', harga: 'Rp130.000', device: '1 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D6B2': { nama: '6 Bulan', harga: 'Rp145.000', device: '2 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D12B1': { nama: '12 Bulan', harga: 'Rp210.000', device: '1 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D12B2': { nama: '12 Bulan', harga: 'Rp270.000', device: '2 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'D12B2P': { nama: '12 Bulan', harga: 'Rp1.000.000', device: '2 Perangkat', dewasa: 'Dengan Konten Dewasa' },
+      'LT': { nama: 'Lifetime', harga: 'Hubungi Admin', device: '2 Perangkat', dewasa: 'Tanpa Konten Dewasa' }
+    };
+
+    const params = new URLSearchParams(window.location.search);
+    const paketId = params.get('paket');
+    const namaUser = document.getElementById("nama");
+    const usernameInput = document.getElementById("username");
+    const waInput = document.getElementById("whatsapp");
+
+    function toggleQRIS() {
+      const qris = document.getElementById('qris-section');
+      qris.style.display = qris.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function updateWALink() {
+      if (paketData[paketId]) {
+        const data = paketData[paketId];
+        const nama = namaUser.value.trim();
+        const username = usernameInput.value.trim();
+        const waUser = waInput.value.trim();
+
+        if (nama && username && waUser) {
+          const message = `Halo Admin, saya ingin konfirmasi pembayaran:\n\n` +
+            `🧑 Nama: ${nama}\n` +
+            `👤 Username: ${username}\n` +
+            `📱 WA Saya: ${waUser}\n\n` +
+            `📦 Paket: ${data.nama}\n💰 Harga: ${data.harga}\n📺 Perangkat: ${data.device}\n🔞 Dewasa: ${data.dewasa}\n\n` +
+            `💡 Bukti transfer akan saya kirim lewat chat ini.`;
+
+          const encodedMsg = encodeURIComponent(message);
+          document.getElementById('wa-link').href = `https://wa.me/6282247433423?text=${encodedMsg}`;
+          document.getElementById('popup').style.display = 'block';
+        } else {
+          document.getElementById('wa-link').href = '#';
+          document.getElementById('popup').style.display = 'none';
+        }
+
+        // Tampilkan info paket
+        document.getElementById('paket-nama').innerText = data.nama;
+        document.getElementById('paket-harga').innerText = data.harga;
+        document.getElementById('paket-device').innerText = data.device;
+        document.getElementById('paket-dewasa').innerText = data.dewasa;
+      }
+    }
+
+    namaUser.addEventListener('input', updateWALink);
+    usernameInput.addEventListener('input', updateWALink);
+    waInput.addEventListener('input', updateWALink);
+
+    updateWALink();
+  </script>
+</body>
+</html>
